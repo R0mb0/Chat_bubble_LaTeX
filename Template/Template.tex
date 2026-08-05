@@ -1,0 +1,244 @@
+% ======================================================================
+%  TEMPLATE: Chat-style conversation transcript (compile with pdflatex)
+% ======================================================================
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Encoding ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+% Note: no \usepackage{babel} on purpose. It isn't needed (we don't use
+% hyphenation or automatic captions), so the template compiles even on
+% minimal TeX installs that don't have extra language patterns.
+
+% ---------- Page layout ----------
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fancyhdr}
+
+% ---------- Colors and boxes ----------
+\usepackage{xcolor}
+\usepackage{varwidth}
+\usepackage[most,breakable]{tcolorbox}
+
+% ---------- Text handling: no hyphenation, ragged-right ----------
+\usepackage{ragged2e}
+\usepackage[none]{hyphenat}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=9999
+\emergencystretch=2em
+
+% ---------- Margin shift for "long" bubbles across pages ----------
+\usepackage{changepage}
+
+\setlength{\parindent}{0pt}
+
+% ======================================================================
+%  "MESSENGER-STYLE" COLORS
+% ======================================================================
+\definecolor{userBlue}{RGB}{0,132,255}
+\definecolor{assistantGrey}{RGB}{233,233,235}
+
+% ======================================================================
+%  STYLE 1 (default): "auto-fit" bubble that hugs the text, like a real
+%  chat bubble. It CANNOT break across two pages (structural TeX limit:
+%  a box sized to its own content must remain a single atomic block ->
+%  see the \msgUser* variant below for long messages).
+%
+%  The width is NOT a fixed value: it is computed message by message
+%  (see \measureMsg below), by measuring the text inside an invisible
+%  box (varwidth) and using that real width to draw the actual bubble.
+%  That's why the bubble "hugs" the text instead of always being the
+%  same width.
+% ======================================================================
+\tcbset{
+  bubbleBase/.style={
+    enhanced,
+    boxrule=0pt,
+    arc=10pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    fontupper=\RaggedRight\linespread{1.05}\selectfont,
+    before skip=3pt, after skip=3pt,
+  }
+}
+
+% ======================================================================
+%  STYLE 2 (starred variant): fixed-width, "breakable" bubble that
+%  splits cleanly across two pages (a straight edge at the cut point,
+%  rounded corners only where the message truly starts/ends). Use it
+%  for very long messages that might not fit on a single page.
+% ======================================================================
+\tcbset{
+  bubbleLong/.style={
+    enhanced,
+    breakable,
+    boxrule=0pt,
+    arc=10pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    fontupper=\RaggedRight\linespread{1.05}\selectfont,
+    width=0.72\linewidth,
+    before skip=3pt, after skip=3pt,
+  }
+}
+
+% Small label above each bubble (sender + optional timestamp)
+\newcommand{\msgLabel}[2]{{\footnotesize\color{gray}#1\ifx&#2&\else\ \textbullet\ #2\fi}\par\vspace{1pt}}
+
+% ======================================================================
+%  THE TWO COMMANDS YOU NEED TO WRITE THE CONVERSATION
+%
+%   \msgUser[time]{text}         -> blue bubble, auto-fit, right-aligned
+%   \msgAssistant[time]{text}    -> grey bubble, auto-fit, left-aligned
+%
+%   Starred variants for very long messages (they break across pages):
+%   \msgUser*[time]{text}
+%   \msgAssistant*[time]{text}
+% ======================================================================
+% ---------- Measuring mechanism (for the auto-fit width) ----------
+% No @ symbol in the names below: \makeatletter is not required.
+\newsavebox{\msgBoxTmp}
+\newlength{\msgWidthTmp}
+\newlength{\msgMinWidth}
+\setlength{\msgMinWidth}{2.4cm}
+
+% Measures the natural width of text #2 (wrapped within the maximum
+% width #1) and stores it, plus the bubble's own padding, in
+% \msgWidthTmp. From this point on \msgWidthTmp is the exact width to
+% give the real tcolorbox, so the bubble shrinks to fit its content
+% instead of always being the same width.
+\newcommand{\measureMsg}[2]{%
+  \sbox{\msgBoxTmp}{\begin{varwidth}{#1}\RaggedRight\linespread{1.05}\selectfont #2\end{varwidth}}%
+  \setlength{\msgWidthTmp}{\wd\msgBoxTmp}%
+  \addtolength{\msgWidthTmp}{16pt}% = left(8pt)+right(8pt) padding of the bubble
+  \ifdim\msgWidthTmp<\msgMinWidth
+    \setlength{\msgWidthTmp}{\msgMinWidth}%
+  \fi
+}
+
+% Speech-bubble tail: a reusable tcolorbox style (not a macro expanded
+% inside the option list, to avoid tikz commas being mistaken for
+% key-list separators).
+% The rounded corner (arc=10pt) curves the last stretch of the border
+% near the corner: the base of the triangle must stay OUTSIDE that zone
+% (more than 10pt away from the corner), otherwise it only touches the
+% real outline with its tip. That's why the base runs from -30pt to
+% -14pt (not from -14pt to 0).
+\tcbset{
+  tailUser/.style={
+    overlay={
+      \fill[userBlue] ([xshift=-30pt]frame.south east) -- ([xshift=-14pt]frame.south east) -- ([xshift=-22pt,yshift=-7pt]frame.south east) -- cycle;
+    }
+  },
+  tailAssistant/.style={
+    overlay={
+      \fill[assistantGrey] ([xshift=30pt]frame.south west) -- ([xshift=14pt]frame.south west) -- ([xshift=22pt,yshift=-7pt]frame.south west) -- cycle;
+    }
+  }
+}
+
+% Same tail, but for the breakable (starred) bubbles: "overlay unbroken
+% and last" draws it only when the box stays on one page OR on the
+% truly final part of a box that did break -- never on an intermediate
+% page-break edge, where a tail would make no visual sense.
+\tcbset{
+  tailUserLong/.style={
+    overlay unbroken and last={
+      \fill[userBlue] ([xshift=-30pt]frame.south east) -- ([xshift=-14pt]frame.south east) -- ([xshift=-22pt,yshift=-7pt]frame.south east) -- cycle;
+    }
+  },
+  tailAssistantLong/.style={
+    overlay unbroken and last={
+      \fill[assistantGrey] ([xshift=30pt]frame.south west) -- ([xshift=14pt]frame.south west) -- ([xshift=22pt,yshift=-7pt]frame.south west) -- cycle;
+    }
+  }
+}
+
+\makeatletter
+\newcommand{\msgUser}{\@ifstar{\msgUser@long}{\msgUser@short}}
+\newcommand{\msgAssistant}{\@ifstar{\msgAssistant@long}{\msgAssistant@short}}
+
+\newcommand{\msgUser@short}[2][]{%
+  \measureMsg{0.68\linewidth}{#2}%
+  \begin{flushright}
+  \msgLabel{You}{#1}
+  \begin{tcolorbox}[bubbleBase,width=\msgWidthTmp,colback=userBlue,colframe=userBlue,
+    coltext=white,tailUser]
+    #2
+  \end{tcolorbox}
+  \end{flushright}
+}
+\newcommand{\msgUser@long}[2][]{%
+  \begin{adjustwidth}{0.28\linewidth}{0pt}
+  \msgLabel{You}{#1}
+  \begin{tcolorbox}[bubbleLong,colback=userBlue,colframe=userBlue,coltext=white,tailUserLong]
+    #2
+  \end{tcolorbox}
+  \end{adjustwidth}
+}
+
+\newcommand{\msgAssistant@short}[2][]{%
+  \measureMsg{0.68\linewidth}{#2}%
+  \begin{flushleft}
+  \msgLabel{Assistant}{#1}
+  \begin{tcolorbox}[bubbleBase,width=\msgWidthTmp,colback=assistantGrey,colframe=assistantGrey,
+    coltext=black,tailAssistant]
+    #2
+  \end{tcolorbox}
+  \end{flushleft}
+}
+\newcommand{\msgAssistant@long}[2][]{%
+  \begin{adjustwidth}{0pt}{0.28\linewidth}
+  \msgLabel{Assistant}{#1}
+  \begin{tcolorbox}[bubbleLong,colback=assistantGrey,colframe=assistantGrey,coltext=black,tailAssistantLong]
+    #2
+  \end{tcolorbox}
+  \end{adjustwidth}
+}
+\makeatother
+
+% ======================================================================
+%  DOCUMENT HEADER (edit these for every conversation)
+% ======================================================================
+\newcommand{\chatTitle}{Conversation title}
+\newcommand{\chatSubtitle}{Subtitle or topic}
+\newcommand{\chatDate}{August 5, 2026}
+\newcommand{\chatParticipants}{Your Name \& Assistant}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\small\chatTitle}
+\rhead{\small\chatDate}
+\cfoot{\thepage}
+
+\begin{document}
+
+% ---------- Title block ----------
+\begin{center}
+  {\LARGE\bfseries \chatTitle}\\[4pt]
+  {\large\itshape \chatSubtitle}\\[6pt]
+  {\small\chatParticipants\ --- \chatDate}
+\end{center}
+
+\vspace{0.6cm}
+\noindent\hrulefill
+\vspace{0.6cm}
+
+% ======================================================================
+%  CONVERSATION: from here on, use ONLY \msgUser and \msgAssistant
+%  (add * for very long messages)
+% ======================================================================
+
+\msgUser[10:32]{Hi! This is a short test message.}
+
+\msgAssistant[10:33]{Hello! This is the reply, left-aligned in a grey bubble, just like Messenger.}
+
+\msgUser[10:34]{Now let me try a slightly longer message, to see how the bubble behaves when the text wraps to more than one line: it should wrap without ever breaking a word, even a long one like internationalization or otorhinolaryngologist.}
+
+\msgAssistant[10:35]{Exactly: no word was broken with a hyphen. If a word doesn't fit in the remaining space, it's moved whole to the next line.}
+
+\msgUser*[10:36]{One last test: a very long message that definitely won't fit on a single page, to see whether the bubble breaks cleanly between the current page and the next one, with rounded corners only where the message truly starts and ends, and a straight edge at the point where the page changes. I'm repeating filler text to make the message long enough to go past the bottom of the current page and continue on the next one, checking that the background color, margin indent, and alignment stay consistent even in the second part of the bubble. Adding a few more lines: test, test, test, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text, filler text.}
+
+\msgAssistant[10:41]{All confirmed: the template works as intended, with "auto-fit" bubbles for normal messages and "breakable" bubbles (with the asterisk) for very long ones.}
+
+\end{document}
