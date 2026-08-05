@@ -1,6 +1,68 @@
-# Chat_bubble_latex
+<div align='center'>
 
+# Chat bubble LaTeX
+
+[![made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6becadfc16af46959853f3d2eef96ccb)](https://app.codacy.com/gh/R0mb0/Chat_bubble_LaTeX/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Compilation_Test](https://github.com/R0mb0/Chat_bubble_LaTeX/actions/workflows/Compilation_Test.yml/badge.svg)](https://github.com/R0mb0/Chat_bubble_LaTeX/actions/workflows/Compilation_Test.yml)
 [![pages-build-deployment](https://github.com/R0mb0/Chat_bubble_LaTeX/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/R0mb0/Chat_bubble_LaTeX/actions/workflows/pages/pages-build-deployment)
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/R0mb0/Chat_bubble_LaTeX)
+[![Open Source Love svg3](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/R0mb0/Chat_bubble_LaTeX)
+[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-blue.svg)](http://paypal.me/R0mb0)
+
 A minimal LaTeX template that turns any two-person conversation into a clean PDF with Messenger-style speech bubbles: auto-fit width, no broken words, and bubbles that split cleanly across pages for very long messages.
+
+## Demo images
+
+[![0.png](https://github.com/R0mb0/Chat_bubble_LaTeX/blob/main/ReadMe_Images/0.png)](https://github.com/R0mb0/Chat_bubble_LaTeX)
+[![1.png](https://github.com/R0mb0/Chat_bubble_LaTeX/blob/main/ReadMe_Images/0.png)](https://github.com/R0mb0/Chat_bubble_LaTeX)
+
+<div align="center">
+  <a href="http://paypal.me/R0mb0">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Light.svg">
+      <img alt="Saved you time? Support the dev" src="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Default.svg">
+    </picture>
+  </a>
+</div>
+</div>
+
+---
+## How to create your personal Chat PDF online for free!
+
+1. Fork this repository by pressing the second button at the top right.
+2. Rename the repository as you want and change the description then Fork it!
+3. ⚠️ You have to activate "Actions" on your repo; go to "Actions", click on
+ "I understand my workflows, go ahead and enable them" ⚠️
+4. Personalize the document properties!
+   1. Access "Template" folder from main page and click on "Template.tex".
+   2. Now click on "Edit this file" (the pencil on top right).
+   3. Follow the comments to personalize the document properties
+5. Now "Commit changes"!
+6. Wait 2 minutes, got to "Actions" -> "Compile" -> click on the last one (look at
+ the date on right) -> scroll down the page and click on "artifact file".  
+7. Done! now you have your tearable poster :) .
+---
+
+## License
+
+Shield: [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
+
+  <a href="https://github.com/R0mb0/Not_made_by_AI">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/R0mb0/Not_made_by_AI/blob/main/Badge/SVG/NotMadeByAIDark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/R0mb0/Not_made_by_AI/blob/main/Badge/SVG/NotMadeByAILight.svg">
+    <img alt="Not made by AI" src="https://github.com/R0mb0/Not_made_by_AI/blob/main/Badge/SVG/NotMadeByAIDefault.svg">
+  </picture>
+</a>
